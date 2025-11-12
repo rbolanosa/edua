@@ -94,28 +94,28 @@ function FireworksOverlay({ onDone, message = "Feliz 2 años mi amor" }) {
     const friction = 0.992;
     const rockets = [];
     const particles = [];
-    const colors = ["#ff4757", "#ffa502", "#2ed573", "#1e90ff", "#ff6b81", "#ff9f1a", "#70a1ff"];
+    const colors = ["#ff4757", "#ffa502", "#ffd43b", "#2ed573", "#1e90ff", "#ff6b81", "#ff9f1a", "#70a1ff"];
 
     function spawnRocket() {
       const x = Math.random() * canvas.width;
       const y = canvas.height + 10;
       const vx = (Math.random() - 0.5) * 1.2;
-      const vy = -(6 + Math.random() * 3);
-      rockets.push({ x, y, vx, vy, life: 60 + Math.random() * 20, color: colors[Math.floor(Math.random() * colors.length)] });
+      const vy = -(6.5 + Math.random() * 3.5);
+      rockets.push({ x, y, vx, vy, life: 70 + Math.random() * 25, color: colors[Math.floor(Math.random() * colors.length)] });
     }
     function explode(x, y, baseColor) {
-      const count = 36 + Math.floor(Math.random() * 24);
+      const count = 54 + Math.floor(Math.random() * 36);
       for (let i = 0; i < count; i++) {
         const angle = (Math.PI * 2) * (i / count);
-        const speed = 2 + Math.random() * 2.2;
-        particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 80 + Math.random() * 40, color: baseColor, size: 2 + Math.random() * 1.5, alpha: 1 });
+        const speed = 2.2 + Math.random() * 2.6;
+        particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 95 + Math.random() * 50, color: baseColor, size: 2.2 + Math.random() * 1.8, alpha: 1 });
       }
     }
     let raf;
     function loop() {
       if (!running) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (Math.random() < 0.08) spawnRocket();
+      if (Math.random() < 0.16) spawnRocket();
       for (let i = rockets.length - 1; i >= 0; i--) {
         const r = rockets[i];
         r.x += r.vx;
@@ -139,7 +139,7 @@ function FireworksOverlay({ onDone, message = "Feliz 2 años mi amor" }) {
         p.vy *= friction;
         p.vy += gravity;
         p.life -= 1;
-        p.alpha = Math.max(0, p.life / 120);
+        p.alpha = Math.max(0, p.life / 140);
         ctx.globalAlpha = p.alpha;
         ctx.fillStyle = p.color;
         ctx.beginPath();
@@ -156,7 +156,7 @@ function FireworksOverlay({ onDone, message = "Feliz 2 años mi amor" }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       if (onDone) onDone();
-    }, 4800);
+    }, 6500);
     return () => {
       setRunning(false);
       cancelAnimationFrame(raf);
@@ -165,7 +165,7 @@ function FireworksOverlay({ onDone, message = "Feliz 2 años mi amor" }) {
     };
   }, [onDone]);
   return (
-    <div className={styles.celebrateOverlay}>
+    <div className={styles.celebrateOverlay} onClick={() => onDone && onDone()}>
       <canvas id="fw-canvas" className={styles.celebrateCanvas} />
       <div className={styles.celebrateMessage}>{message}</div>
     </div>
@@ -538,7 +538,7 @@ export default function Home() {
         </div>
       )}
       {showFireworks && (
-        <FireworksOverlay onDone={() => { setShowFireworks(false); setLetterPage(0); }} message="Feliz 2 años mi amor" />
+        <FireworksOverlay onDone={() => { setShowFireworks(false); setShowLocal(false); onOpenChange(false); }} message="Feliz 2 años mi amor" />
       )}
     </div>
   );
