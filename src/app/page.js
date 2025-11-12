@@ -6,6 +6,11 @@ import bgImage from "./img/tulipanes.jpg";
 import lazoImage from "./img/lazo.svg";
 import styles from "./page.module.css";
 import Image from "next/image";
+import gal1 from "./img/gal1.jpeg";
+import gal2 from "./img/gal2.jpeg";
+import gal3 from "./img/gal3.jpeg";
+import gal4 from "./img/gal4.jpeg";
+import gal5 from "./img/gal5.jpeg";
 
 function HeartIcon({ filled }) {
   return (
@@ -39,6 +44,37 @@ function HeartCloud({ count = 36 }) {
     );
   });
   return <>{hearts}</>;
+}
+
+function RomanticGallery() {
+  const photos = [gal1, gal2, gal3, gal4, gal5];
+  const [index, setIndex] = useState(0);
+  const next = () => setIndex((i) => (i + 1) % photos.length);
+  const prev = () => setIndex((i) => (i - 1 + photos.length) % photos.length);
+  useEffect(() => {
+    const id = setInterval(next, 4000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div className={styles.galleryWrap} aria-label="Galería de fotos">
+      <div className={styles.galleryViewport}>
+        {photos.map((src, i) => (
+          <div key={i} className={`${styles.gallerySlide} ${i === index ? styles.galleryActive : ""}`}>
+            <Image src={src} alt={`Foto ${i + 1}`} fill priority className={styles.galleryImage} sizes="(max-width: 768px) 100vw, 800px" />
+          </div>
+        ))}
+      </div>
+      <div className={styles.galleryNav}>
+        <button className={styles.galleryArrow} onClick={prev} aria-label="Anterior">◀</button>
+        <div className={styles.galleryDots}>
+          {photos.map((_, i) => (
+            <button key={i} className={`${styles.galleryDot} ${i === index ? styles.dotActive : ""}`} onClick={() => setIndex(i)} aria-label={`Ir a la foto ${i + 1}`}></button>
+          ))}
+        </div>
+        <button className={styles.galleryArrow} onClick={next} aria-label="Siguiente">▶</button>
+      </div>
+    </div>
+  );
 }
 
 export default function Home() {
@@ -196,6 +232,13 @@ export default function Home() {
                                 </div>
                               </>
                             )}
+                            {letterPage === 3 && (
+                              <>
+                                <div className={styles.letterTitle}>Nuestra historia en fotos</div>
+                                <div className={styles.bigLove}>TE AMO MI AMOR</div>
+                                <RomanticGallery />
+                              </>
+                            )}
                         </div>
                         <div className={styles.panelFloaters}><HeartCloud count={32} /></div>
                       </div>
@@ -234,7 +277,7 @@ export default function Home() {
 
                     <div className={styles.bottomRow}>
                       <button className={`${styles.navBtn} ${styles.back}`} onClick={() => setLetterPage(p => Math.max(0, p - 1))}>BACK</button>
-                        <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setLetterPage(p => Math.min(2, p + 1))}>NEXT</button>
+                        <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setLetterPage(p => Math.min(3, p + 1))}>NEXT</button>
                       <div className={styles.arrows}><span>◀</span><span>▶</span></div>
                     </div>
 
@@ -320,6 +363,13 @@ export default function Home() {
                             </div>
                           </>
                         )}
+                        {letterPage === 3 && (
+                          <>
+                            <div className={styles.letterTitle}>Nuestra historia en fotos</div>
+                            <div className={styles.bigLove}>TE AMO MI AMOR</div>
+                            <RomanticGallery />
+                          </>
+                        )}
                       </div>
                       <div className={styles.panelFloaters}><HeartCloud count={32} /></div>
                   </div>
@@ -358,7 +408,7 @@ export default function Home() {
 
                 <div className={styles.bottomRow}>
                   <button className={`${styles.navBtn} ${styles.back}`} onClick={() => setLetterPage(p => Math.max(0, p - 1))}>BACK</button>
-                  <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setLetterPage(p => Math.min(2, p + 1))}>NEXT</button>
+                  <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setLetterPage(p => Math.min(3, p + 1))}>NEXT</button>
                   <div className={styles.arrows}><span>◀</span><span>▶</span></div>
                 </div>
 
