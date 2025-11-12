@@ -462,7 +462,7 @@ a.secondary {
 .panel {
   background: #fff6e9;
   color: #3a1d1d;
-  padding: 28px 24px 96px;
+  padding: 28px 24px 28px;
   position: relative;
   max-width: 1040px;
   margin: 0 auto;
@@ -484,13 +484,15 @@ a.secondary {
 .letterPanel {
   margin: 0 auto;
   width: clamp(420px, 92vw, 800px);
-  padding: 12px 12px 320px;
+  padding: 12px 12px 22px;
   position: relative;
+  z-index: 1;
 }
+.panelFloaters { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .envelopeWrap { position: relative; }
 .envelope {
   position: relative;
-  height: 360px;
+  height: 240px;
   background: linear-gradient(180deg, #f5f2f0 0%, #e7e3e0 100%);
   border-radius: 12px;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06), 0 10px 24px rgba(0,0,0,0.15);
@@ -525,51 +527,68 @@ a.secondary {
 }
 .envelopeFlap::after { content: ""; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #fff; border-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.12); }
 .letterSheet {
-  position: absolute;
-  top: -96px; left: 50%; transform: translateX(-50%);
-  width: clamp(520px, 94%, 820px);
-  background: linear-gradient(180deg, #ffffff 0%, #fff8f2 100%);
+  position: static;
+  top: auto; left: auto; transform: none;
+  width: 100%;
+  background: transparent;
   color: #5a3f3f;
-  border-radius: 16px;
-  padding: 28px 32px;
-  text-align: center;
-  box-shadow: 0 18px 36px rgba(0,0,0,0.20);
-  border: 1px solid rgba(203, 164, 150, 0.35);
+  border-radius: 0;
+  padding: 14px 18px;
+  text-align: left;
+  box-shadow: none;
+  border: none;
   font-family: "Crimson Text", Georgia, "Times New Roman", serif;
   font-size: 18px;
   line-height: 1.65;
-  z-index: 3;
+  /* Animación de entrada suave de la carta */
+  animation: letterEnter 380ms ease;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
 }
 /* pequeño acento decorativo superior */
-.letterSheet::before {
-  content: "";
-  position: absolute;
-  top: 10px; left: 50%; transform: translateX(-50%);
-  width: 48px; height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #f3c4c4, #e69999, #f3c4c4);
-  opacity: 0.6;
-}
+.letterSheet::before { content: none; display: none; }
 /* sin scroll interno: dejamos que el modal/página maneje el desplazamiento */
-.letterSheet::after {
-  content: "";
-  position: absolute;
-  bottom: -14px; left: 50%; transform: translateX(-50%);
-  width: 0; height: 0;
-  border-left: 16px solid transparent;
-  border-right: 16px solid transparent;
-  border-top: 18px solid #fff;
-}
+.letterSheet::after { content: none; display: none; }
 .letterTitle {
   font-family: "Playfair Display", Georgia, serif;
   font-size: 20px;
   color: #7a4545;
   text-align: center;
   margin: 6px 0 12px;
+  position: relative;
+}
+.letterTitle::after {
+  content: "";
+  display: block;
+  height: 3px;
+  max-width: 320px;
+  margin: 6px auto 0;
+  background: linear-gradient(90deg, #c33, #f7b267, #c33);
+  border-radius: 2px;
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: underlineGrow 600ms ease forwards;
 }
 .letterBody p {
   margin: 0 0 10px;
+  opacity: 0;
+  /* Aparición escalonada de párrafos para dar ritmo al texto */
+  animation: fadeSlideUp 550ms ease forwards;
 }
+.letterBody p:hover {
+  background: linear-gradient(90deg, rgba(255, 238, 220, 0.6), rgba(255, 238, 220, 0.2));
+  border-radius: 8px;
+}
+/* Delays para los primeros párrafos (cubre la mayoría de vistas) */
+.letterBody p:nth-child(1) { animation-delay: .08s; }
+.letterBody p:nth-child(2) { animation-delay: .16s; }
+.letterBody p:nth-child(3) { animation-delay: .24s; }
+.letterBody p:nth-child(4) { animation-delay: .32s; }
+.letterBody p:nth-child(5) { animation-delay: .40s; }
+.letterBody p:nth-child(6) { animation-delay: .48s; }
+.letterBody p:nth-child(7) { animation-delay: .56s; }
+.letterBody p:nth-child(8) { animation-delay: .64s; }
 .bowWrap { position: absolute; bottom: 18px; right: 24px; left: auto; transform: none; z-index: 4; }
 .bowLarge { width: 120px; height: auto; }
 .waveDecor { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 70%; height: 48px; z-index: 0; }
@@ -589,7 +608,6 @@ a.secondary {
 .selectedDay::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ffc107; background: rgba(255, 193, 7, 0.35); z-index: 0; }
 
 .bottomRow { display: grid; grid-template-columns: 80px 1fr 60px; align-items: center; gap: 8px; margin-top: 12px; }
-.bottomRow { position: relative; z-index: 10; }
 .navBtn { border: 1px solid #c33; color: #c33; background: #fff; padding: 6px 10px; border-radius: 999px; cursor: pointer; font-weight: 600; }
 .next { background: #c33; color: #fff; }
 .arrows { text-align: right; }
@@ -608,10 +626,32 @@ a.secondary {
   .day { padding: 4px 0; }
   .selectedDay::after { width: 22px; height: 22px; }
   .bottomRow { grid-template-columns: 70px 1fr 50px; }
-  .envelope { height: 280px; }
+  .envelope { height: 240px; }
   .envelopeFlap { width: 84%; height: 96px; top: -48px; }
   .bowLarge { width: 100px; }
-  .letterSheet { width: clamp(260px, 94%, 420px); top: -38px; font-size: 16px; }
+  .letterPanel { max-height: 72vh; }
+  .letterSheet {
+    width: clamp(260px, 94%, 420px);
+    font-size: 16px;
+    line-height: 1.58;
+    padding: 10px 12px;
+    max-height: 72vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+/* Keyframes */
+@keyframes letterEnter {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes underlineGrow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 /* Ajuste del wrapper del modal principal para centrar el contenido */
 .modalWrapper { justify-content: center !important; align-items: center !important; padding-top: 0 !important; }

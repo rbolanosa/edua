@@ -27,11 +27,25 @@ function SmallHeart({ style }) {
   );
 }
 
+function HeartCloud({ count = 36 }) {
+  const hearts = Array.from({ length: count }, (_, i) => {
+    const size = 16 + (i % 5) * 3;
+    const top = `${(i * 7) % 90 + 3}%`;
+    const left = `${(i * 13) % 90 + 5}%`;
+    const delay = `${(i * 0.12) % 3}s`;
+    const opacity = 0.12 + ((i % 7) * 0.06);
+    return (
+      <SmallHeart key={`hc-${i}`} style={{ top, left, width: size, height: size, opacity, animationDelay: delay }} />
+    );
+  });
+  return <>{hearts}</>;
+}
+
 export default function Home() {
   const [liked, setLiked] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [showLocal, setShowLocal] = useState(false);
-  const [showLetter, setShowLetter] = useState(false);
+  const [letterPage, setLetterPage] = useState(0);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") setShowLocal(false); };
@@ -47,7 +61,7 @@ export default function Home() {
           `linear-gradient(135deg, #163315 0%, #2e5b28 100%)`,
       }}
     >
-      <div className={styles.overlayText}>Mi vida era un desastre pero...</div>
+      <div className={styles.overlayText}>Mi Preciosaaaaaaaaa! </div>
 
       {/* Reproductor visible en el encabezado del modal */}
 
@@ -138,33 +152,52 @@ export default function Home() {
                       <div className={styles.topSubtitle}>JUNTOS</div>
                     </div>
 
-                    {showLetter ? (
+                    {letterPage > 0 ? (
                       <div className={styles.letterPanel}>
-                        <div className={styles.envelopeWrap}>
-                          <div className={styles.envelope}>
-                            <div className={styles.envelopeFlap}></div>
-                            <div className={styles.letterSheet}>
-                              <div className={styles.letterTitle}>Para ti, mi amor eterno ALH:</div>
-                              <div className={styles.letterBody}>
-                                <p>
-                                  Hoy celebramos dos años de amor, de caminos compartidos, de risas, de abrazos, de instantes que quedaron tatuados en el alma. Dos años contigo, la mujer que cambió mi mundo y le dio sentido a cada amanecer.
-                                </p>
-                                <p>
-                                  Eres bondadosa, amorosa y generosa con todos; tienes una luz tan tuya que ilumina a quien te rodea. Admiro tu fuerza, tu inteligencia, tu entrega y esa forma tan hermosa de amar con todo el corazón.
-                                </p>
-                                <p>
-                                  Tu sonrisa, tus hoyuelitos, tu voz, tu mirada… cada detalle tuyo me enamora una y otra vez. Me basta verte feliz para que todo en mi vida tenga sentido. Amo tenerte entre mis brazos, ver cómo el tiempo se detiene cuando estás cerca, y sentir que ahí, en ese instante, todo es perfecto.
-                                </p>
-                              </div>
-                            </div>
-                            <div className={styles.bowWrap}>
-                              <Image src={lazoImage} alt="Lazo" width={140} height={90} className={styles.bowLarge} />
-                            </div>
-                            <svg className={styles.waveDecor} viewBox="0 0 400 70" preserveAspectRatio="none">
-                              <path d="M0 20 Q20 0 40 20 T80 20 T120 20 T160 20 T200 20 T240 20 T280 20 T320 20 T360 20 L400 20 L400 70 L0 70 Z" fill="#8db3ff"/>
-                            </svg>
-                          </div>
+                        <div key={letterPage} className={styles.letterSheet}>
+                            {letterPage === 1 && (
+                              <>
+                                <div className={styles.letterTitle}>Para ti, mi amor eterno ALH:</div>
+                                <div className={styles.letterBody}>
+                                  <p>
+                                    Hoy celebramos dos años de amor, de caminos compartidos, de risas, de abrazos, de instantes que quedaron tatuados en el alma. Dos años contigo, la mujer que cambió mi mundo y le dio sentido a cada amanecer.
+                                  </p>
+                                  <p>
+                                    Eres bondadosa, amorosa y generosa con todos; tienes una luz tan tuya que ilumina a quien te rodea. Admiro tu fuerza, tu inteligencia, tu entrega y esa forma tan hermosa de amar con todo el corazón.
+                                  </p>
+
+                                </div>
+                              </>
+                            )}
+                            {letterPage === 2 && (
+                              <>
+                                <div className={styles.letterBody}>
+                                   <p>
+                                    Tu sonrisa, tus hoyuelitos, tu voz, tu mirada… cada detalle tuyo me enamora una y otra vez. Me basta verte feliz para que todo en mi vida tenga sentido. Amo tenerte entre mis brazos, ver cómo el tiempo se detiene cuando estás cerca, y sentir que ahí, en ese instante, todo es perfecto.
+                                  </p>
+                                  <p>
+                                    Tu piel, tu cuerpo, tu sensualidad… son un fuego que vive en mi mente y en mi corazón. Sentirte junto a mí es una experiencia indescriptible, una conexión que va más allá de lo físico, donde solo existen nuestras almas fundidas en amor. Amo cada parte de ti, cada curva, cada suspiro, cada instante compartido.
+                                  </p>
+                                  <p>
+                                    Sí, tienes tu carácter, te irritas con facilidad a veces, pero eso también te hace única. Te amo completa, con tus virtudes, tus defectos, tus luces y tus sombras.
+                                  </p>
+                                  <p>
+                                    Gracias por hacerme tan feliz, por acompañarme, por amarme y por enseñarme lo que es el amor verdadero. Estos dos años contigo han sido el mejor capítulo de mi vida, y no quiero que se acabe nunca.
+                                  </p>
+                                  <p>
+                                    Sueño con verte convertida en mi esposa, en la madre de mis hijos, en mi compañera de vida por siempre. Porque mi amor por ti no se mide ni se explica, solo se siente… y se siente con todo el alma.
+                                  </p>
+                                  <p>
+                                    Feliz aniversario, mi vida.Te amo más de lo que las palabras pueden decir.
+                                  </p>
+                                  <p>
+                                    Con todo mi corazón,Edu QP
+                                  </p>
+                                </div>
+                              </>
+                            )}
                         </div>
+                        <div className={styles.panelFloaters}><HeartCloud count={32} /></div>
                       </div>
                     ) : (
                       <>
@@ -200,8 +233,8 @@ export default function Home() {
                     )}
 
                     <div className={styles.bottomRow}>
-                      <button className={`${styles.navBtn} ${styles.back}`} onClick={() => setShowLetter(false)}>BACK</button>
-                      <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setShowLetter(true)}>NEXT</button>
+                      <button className={`${styles.navBtn} ${styles.back}`} onClick={() => setLetterPage(p => Math.max(0, p - 1))}>BACK</button>
+                        <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setLetterPage(p => Math.min(2, p + 1))}>NEXT</button>
                       <div className={styles.arrows}><span>◀</span><span>▶</span></div>
                     </div>
 
@@ -237,40 +270,58 @@ export default function Home() {
             </div>
             <div className={styles.calModal}>
               <div className={styles.panel}>
-                <button className={styles.panelClose} onClick={() => setShowLocal(false)}>Cerrar</button>
+                <button className={styles.panelClose} onClick={() => { setShowLocal(false); setLetterPage(0); }}>Cerrar</button>
                 <div className={styles.panelHeader}>
                   <div className={styles.star}>✳</div>
                   <div className={styles.topTitle}>Dos años</div>
                   <div className={styles.topSubtitle}>JUNTOS</div>
                 </div>
 
-                {showLetter ? (
+                {letterPage > 0 ? (
                   <div className={styles.letterPanel}>
-                    <div className={styles.envelopeWrap}>
-                      <div className={styles.envelope}>
-                        <div className={styles.envelopeFlap}></div>
-                        <div className={styles.letterSheet}>
-                          <div className={styles.letterTitle}>Para ti, mi amor eterno ALH:</div>
-                          <div className={styles.letterBody}>
-                            <p>
-                              Hoy celebramos dos años de amor, de caminos compartidos, de risas, de abrazos, de instantes que quedaron tatuados en el alma. Dos años contigo, la mujer que cambió mi mundo y le dio sentido a cada amanecer.
-                            </p>
-                            <p>
-                              Eres bondadosa, amorosa y generosa con todos; tienes una luz tan tuya que ilumina a quien te rodea. Admiro tu fuerza, tu inteligencia, tu entrega y esa forma tan hermosa de amar con todo el corazón.
-                            </p>
-                            <p>
-                              Tu sonrisa, tus hoyuelitos, tu voz, tu mirada… cada detalle tuyo me enamora una y otra vez. Me basta verte feliz para que todo en mi vida tenga sentido. Amo tenerte entre mis brazos, ver cómo el tiempo se detiene cuando estás cerca, y sentir que ahí, en ese instante, todo es perfecto.
-                            </p>
-                          </div>
-                        </div>
-                        <div className={styles.bowWrap}>
-                          <Image src={lazoImage} alt="Lazo" width={140} height={90} className={styles.bowLarge} />
-                        </div>
-                        <svg className={styles.waveDecor} viewBox="0 0 400 70" preserveAspectRatio="none">
-                          <path d="M0 20 Q20 0 40 20 T80 20 T120 20 T160 20 T200 20 T240 20 T280 20 T320 20 T360 20 L400 20 L400 70 L0 70 Z" fill="#8db3ff"/>
-                        </svg>
+                      <div key={letterPage} className={styles.letterSheet}>
+                        {letterPage === 1 && (
+                          <>
+                            <div className={styles.letterTitle}>Para ti, mi amor eterno ALH:</div>
+                            <div className={styles.letterBody}>
+                              <p>
+                                Hoy celebramos dos años de amor, de caminos compartidos, de risas, de abrazos, de instantes que quedaron tatuados en el alma. Dos años contigo, la mujer que cambió mi mundo y le dio sentido a cada amanecer.
+                              </p>
+                              <p>
+                                Eres bondadosa, amorosa y generosa con todos; tienes una luz tan tuya que ilumina a quien te rodea. Admiro tu fuerza, tu inteligencia, tu entrega y esa forma tan hermosa de amar con todo el corazón.
+                              </p>
+                            </div>
+                          </>
+                        )}
+                        {letterPage === 2 && (
+                          <>
+                            <div className={styles.letterBody}>
+                              <p>
+                                Tu sonrisa, tus hoyuelitos, tu voz, tu mirada… cada detalle tuyo me enamora una y otra vez. Me basta verte feliz para que todo en mi vida tenga sentido. Amo tenerte entre mis brazos, ver cómo el tiempo se detiene cuando estás cerca, y sentir que ahí, en ese instante, todo es perfecto.
+                              </p>
+                              <p>
+                                Tu piel, tu cuerpo, tu sensualidad… son un fuego que vive en mi mente y en mi corazón. Sentirte junto a mí es una experiencia indescriptible, una conexión que va más allá de lo físico, donde solo existen nuestras almas fundidas en amor. Amo cada parte de ti, cada curva, cada suspiro, cada instante compartido.
+                              </p>
+                              <p>
+                                Sí, tienes tu carácter, te irritas con facilidad a veces, pero eso también te hace única. Te amo completa, con tus virtudes, tus defectos, tus luces y tus sombras.
+                              </p>
+                              <p>
+                                Gracias por hacerme tan feliz, por acompañarme, por amarme y por enseñarme lo que es el amor verdadero. Estos dos años contigo han sido el mejor capítulo de mi vida, y no quiero que se acabe nunca.
+                              </p>
+                              <p>
+                                Sueño con verte convertida en mi esposa, en la madre de mis hijos, en mi compañera de vida por siempre. Porque mi amor por ti no se mide ni se explica, solo se siente… y se siente con todo el alma.
+                              </p>
+                              <p>
+                                Feliz aniversario, mi vida.Te amo más de lo que las palabras pueden decir.
+                              </p>
+                              <p>
+                                Con todo mi corazón,Edu QP
+                              </p>
+                            </div>
+                          </>
+                        )}
                       </div>
-                    </div>
+                      <div className={styles.panelFloaters}><HeartCloud count={32} /></div>
                   </div>
                 ) : (
                   <>
@@ -306,15 +357,15 @@ export default function Home() {
                 )}
 
                 <div className={styles.bottomRow}>
-                  <button className={`${styles.navBtn} ${styles.back}`} onClick={() => setShowLetter(false)}>BACK</button>
-                  <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setShowLetter(true)}>NEXT</button>
+                  <button className={`${styles.navBtn} ${styles.back}`} onClick={() => setLetterPage(p => Math.max(0, p - 1))}>BACK</button>
+                  <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setLetterPage(p => Math.min(2, p + 1))}>NEXT</button>
                   <div className={styles.arrows}><span>◀</span><span>▶</span></div>
                 </div>
 
                 <div className={styles.footerDates}><span>Eduar</span><span>12.11.25</span><span>Anali</span></div>
               </div>
             </div>
-            
+
           </div>
         </div>
       )}
