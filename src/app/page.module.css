@@ -486,7 +486,7 @@ a.secondary {
 .letterPanel {
   margin: 0 auto;
   width: 100%;
-  max-width: 640px;
+  max-width: 900px;
   padding: 12px 12px 22px;
   position: relative;
   z-index: 1;
@@ -552,6 +552,7 @@ a.secondary {
   max-width: 560px;
   margin: 0 auto;
 }
+.letterSheetWide { max-width: 860px; }
 /* pequeño acento decorativo superior */
 .letterSheet::before { content: none; display: none; }
 /* sin scroll interno: dejamos que el modal/página maneje el desplazamiento */
@@ -690,7 +691,7 @@ a.secondary {
 /* ===== Galería romántica de fotos ===== */
 .galleryWrap {
   width: 100%;
-  height: 200px;
+  height: 420px;
   border-radius: 12px;
   overflow: hidden;
   background: #fff6e9; /* igual que el panel crema */
@@ -743,5 +744,5 @@ a.secondary {
 }
 
 @media (max-width: 640px) {
-  .galleryWrap { height: 160px; }
+  .galleryWrap { height: 360px; }
 }

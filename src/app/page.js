@@ -190,7 +190,7 @@ export default function Home() {
 
                     {letterPage > 0 ? (
                       <div className={styles.letterPanel}>
-                        <div key={letterPage} className={styles.letterSheet}>
+                        <div key={letterPage} className={`${styles.letterSheet} ${letterPage === 3 ? styles.letterSheetWide : ''}`}>
                             {letterPage === 1 && (
                               <>
                                 <div className={styles.letterTitle}>Para ti, mi amor eterno ALH:</div>
