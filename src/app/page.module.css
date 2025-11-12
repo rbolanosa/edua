@@ -329,6 +329,7 @@ a.secondary {
   margin: 6px auto 14px;
   border-radius: 12px;
   overflow: hidden;
+  position: relative;
 }
 
 .panel {
@@ -413,6 +414,23 @@ a.secondary {
 .next { justify-self: center; background: #c81e1e; color: #fff; }
 .arrows { justify-self: end; display: flex; gap: 10px; }
 .footerDates { display: flex; justify-content: space-between; margin-top: 10px; color: #6b6b6b; }
+
+/* Botón para activar sonido en iOS (aparece cuando está muteado) */
+.soundBtn {
+  position: absolute;
+  top: 6px; right: 8px;
+  background: #ffc107;
+  color: #3a2a0a;
+  border: 2px solid #b38600;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+.soundBtn:hover { filter: brightness(1.05); }
+.soundBtn:active { transform: translateY(1px); }
 /* Fallback modal overlay */
 .localOverlay {
   position: absolute;

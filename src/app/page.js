@@ -156,7 +156,7 @@ function FireworksOverlay({ onDone, message = "Feliz 2 años mi amor" }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       if (onDone) onDone();
-    }, 6500);
+    }, 20000);
     return () => {
       setRunning(false);
       cancelAnimationFrame(raf);
@@ -178,12 +178,29 @@ export default function Home() {
   const [showLocal, setShowLocal] = useState(false);
   const [letterPage, setLetterPage] = useState(0);
   const [showFireworks, setShowFireworks] = useState(false);
+  const [ytMuted, setYtMuted] = useState(true);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") setShowLocal(false); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // Desbloquear sonido automáticamente tras la primera interacción del usuario (iOS requiere gesto)
+  useEffect(() => {
+    if (!ytMuted) return; // ya está con sonido
+    const unlock = () => {
+      setYtMuted(false);
+      document.removeEventListener('click', unlock);
+      document.removeEventListener('touchstart', unlock);
+    };
+    document.addEventListener('click', unlock, { once: true });
+    document.addEventListener('touchstart', unlock, { once: true });
+    return () => {
+      document.removeEventListener('click', unlock);
+      document.removeEventListener('touchstart', unlock);
+    };
+  }, [ytMuted]);
   return (
     <div
       className={styles.screen}
@@ -266,13 +283,16 @@ export default function Home() {
                   <iframe
                     width="100%"
                     height="60"
-                    src="https://www.youtube.com/embed/InyzXj3Dhh8?si=F_Zbt24XmgO9O2-O&start=1&autoplay=1"
+                    src={`https://www.youtube.com/embed/InyzXj3Dhh8?si=F_Zbt24XmgO9O2-O&start=1&autoplay=1&playsinline=1&controls=0&enablejsapi=1&mute=${ytMuted ? 1 : 0}`}
                     title="YouTube video player"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
                   />
+                  {ytMuted && (
+                    <button className={styles.soundBtn} onClick={() => setYtMuted(false)} aria-label="Activar sonido">Activar sonido 🔊</button>
+                  )}
                 </div>
               </ModalHeader>
               <ModalBody>
@@ -410,13 +430,16 @@ export default function Home() {
               <iframe
                 width="100%"
                 height="60"
-                src="https://www.youtube.com/embed/InyzXj3Dhh8?si=F_Zbt24XmgO9O2-O&start=1&autoplay=1"
+                src={`https://www.youtube.com/embed/InyzXj3Dhh8?si=F_Zbt24XmgO9O2-O&start=1&autoplay=1&playsinline=1&controls=0&enablejsapi=1&mute=${ytMuted ? 1 : 0}`}
                 title="YouTube video player"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
               />
+              {ytMuted && (
+                <button className={styles.soundBtn} onClick={() => setYtMuted(false)} aria-label="Activar sonido">Activar sonido 🔊</button>
+              )}
             </div>
             <div className={styles.calModal}>
               <div className={styles.panel}>
