@@ -77,11 +77,107 @@ function RomanticGallery() {
   );
 }
 
+function FireworksOverlay({ onDone, message = "Feliz 2 años mi amor" }) {
+  const [running, setRunning] = useState(true);
+  useEffect(() => {
+    const canvas = document.getElementById("fw-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const gravity = 0.06;
+    const friction = 0.992;
+    const rockets = [];
+    const particles = [];
+    const colors = ["#ff4757", "#ffa502", "#2ed573", "#1e90ff", "#ff6b81", "#ff9f1a", "#70a1ff"];
+
+    function spawnRocket() {
+      const x = Math.random() * canvas.width;
+      const y = canvas.height + 10;
+      const vx = (Math.random() - 0.5) * 1.2;
+      const vy = -(6 + Math.random() * 3);
+      rockets.push({ x, y, vx, vy, life: 60 + Math.random() * 20, color: colors[Math.floor(Math.random() * colors.length)] });
+    }
+    function explode(x, y, baseColor) {
+      const count = 36 + Math.floor(Math.random() * 24);
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2) * (i / count);
+        const speed = 2 + Math.random() * 2.2;
+        particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 80 + Math.random() * 40, color: baseColor, size: 2 + Math.random() * 1.5, alpha: 1 });
+      }
+    }
+    let raf;
+    function loop() {
+      if (!running) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (Math.random() < 0.08) spawnRocket();
+      for (let i = rockets.length - 1; i >= 0; i--) {
+        const r = rockets[i];
+        r.x += r.vx;
+        r.y += r.vy;
+        r.vy += gravity * 0.25;
+        r.life -= 1;
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = r.color;
+        ctx.fill();
+        if (r.vy >= 0 || r.life <= 0) {
+          explode(r.x, r.y, r.color);
+          rockets.splice(i, 1);
+        }
+      }
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= friction;
+        p.vy *= friction;
+        p.vy += gravity;
+        p.life -= 1;
+        p.alpha = Math.max(0, p.life / 120);
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        if (p.life <= 0 || p.alpha <= 0.02) particles.splice(i, 1);
+      }
+      raf = requestAnimationFrame(loop);
+    }
+    raf = requestAnimationFrame(loop);
+    const timer = setTimeout(() => {
+      setRunning(false);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+      if (onDone) onDone();
+    }, 4800);
+    return () => {
+      setRunning(false);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+      clearTimeout(timer);
+    };
+  }, [onDone]);
+  return (
+    <div className={styles.celebrateOverlay}>
+      <canvas id="fw-canvas" className={styles.celebrateCanvas} />
+      <div className={styles.celebrateMessage}>{message}</div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [liked, setLiked] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [showLocal, setShowLocal] = useState(false);
   const [letterPage, setLetterPage] = useState(0);
+  const [showFireworks, setShowFireworks] = useState(false);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") setShowLocal(false); };
@@ -128,7 +224,7 @@ export default function Home() {
 
           <div className={styles.namesRow}>
             <span>Eduar</span>
-            <span>Anali</span>
+            <span>Analy</span>
           </div>
           <div className={styles.date}>12.11.25</div>
         </div>
@@ -277,11 +373,22 @@ export default function Home() {
 
                     <div className={styles.bottomRow}>
                       <button className={`${styles.navBtn} ${styles.back}`} onClick={() => setLetterPage(p => Math.max(0, p - 1))}>BACK</button>
-                        <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setLetterPage(p => Math.min(3, p + 1))}>NEXT</button>
+                        <button
+                          className={`${styles.navBtn} ${styles.next}`}
+                          onClick={() => {
+                            setLetterPage(p => {
+                              if (p >= 3) {
+                                setShowFireworks(true);
+                                return 3;
+                              }
+                              return Math.min(3, p + 1);
+                            });
+                          }}
+                        >NEXT</button>
                       <div className={styles.arrows}><span>◀</span><span>▶</span></div>
                     </div>
 
-                    <div className={styles.footerDates}><span>Eduar</span><span>12.11.25</span><span>Anali</span></div>
+                    <div className={styles.footerDates}><span>Eduar</span><span>12.11.25</span><span>Analy</span></div>
                   </div>
                 </div>
               </ModalBody>
@@ -408,16 +515,30 @@ export default function Home() {
 
                 <div className={styles.bottomRow}>
                   <button className={`${styles.navBtn} ${styles.back}`} onClick={() => setLetterPage(p => Math.max(0, p - 1))}>BACK</button>
-                  <button className={`${styles.navBtn} ${styles.next}`} onClick={() => setLetterPage(p => Math.min(3, p + 1))}>NEXT</button>
+                  <button
+                    className={`${styles.navBtn} ${styles.next}`}
+                    onClick={() => {
+                      setLetterPage(p => {
+                        if (p >= 3) {
+                          setShowFireworks(true);
+                          return 3;
+                        }
+                        return Math.min(3, p + 1);
+                      });
+                    }}
+                  >NEXT</button>
                   <div className={styles.arrows}><span>◀</span><span>▶</span></div>
                 </div>
 
-                <div className={styles.footerDates}><span>Eduar</span><span>12.11.25</span><span>Anali</span></div>
+                <div className={styles.footerDates}><span>Eduar</span><span>12.11.25</span><span>Analy</span></div>
               </div>
             </div>
 
           </div>
         </div>
+      )}
+      {showFireworks && (
+        <FireworksOverlay onDone={() => { setShowFireworks(false); setLetterPage(0); }} message="Feliz 2 años mi amor" />
       )}
     </div>
   );
